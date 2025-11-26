@@ -1,0 +1,28 @@
+Title: Clovelt's Animated Text
+Author: Clovelt
+Tags: Text, Animation, Dialog
+
+Description:
+Animation system for text objects.
+Parses a text, adding animation tags to it according to syntax below.
+
+SYNTAX
+
+[b][Tag] Text [/Tag][/b] will output effect with default values.
+Ex. [📸]Flash[/📸] will output the flash effect with default values
+
+[b][Tag=[i]valueMult,speedMult,freqMult[/i]] Text [/Tag][/b] will output effect with custom values.
+Ex. [📸=2,3]Flash[/📸] will have 2x the magnitude and 3x the speed.
+
+[📸]Flash[/📸] - Blinks
+[🌊]Wave[/🌊] - Changes size of individual chars in a wave
+[👻]Ghost[/👻] - Changes opacity of chars in a wave
+[⛰️]Size[/⛰️] - Changes size of string
+[⭕][outlineback=#ff0000]Line[/outlineback][/⭕] - Stroke width. Useful for outline/outlineBack/stroke
+[〰️]Offset[/〰️] - Shifts chars vertically in a wave
+[🏳️‍🌈]HSL[/🏳️‍🌈] - Rainbow hue shift effect
+[🫨]Shake[/🫨] - Shake Y offset
+[🫙]Glass[/🫙] - Gradually change string opacity
+
+Combination example - Shake effect + Outline + Color, [b]animation effect must be the first one in the chain[/b]:
+[🫨=3][lineThickness=3][outlineback=#000000][color=#ff0000]Custom[/color][/outlineback][/lineThickness][/🫨]

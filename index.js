@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_URL = 'https://gustavochico.com/browserpike/content/';
+    const API_URL = location.protocol==="file:" ? "https://gustavochico.com/browserpike/content/" : location.hostname==="localhost" ? "http://localhost:3000/browserpike/content/" : location.origin + location.pathname.split("/content/")[0] + "/content/";
     const fileTree = document.getElementById('file-tree');
     const loader = document.getElementById('loader');
     const previewContainer = document.getElementById('preview-container');
@@ -141,6 +141,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentPath = path ? `${path}/${key}` : key;
             const isZip = key.endsWith('.zip');
             const isFolder = !isZip && Object.keys(node[key]).length > 0;
+
+            // --- Hide platform-specific zips if a base zip exists ---
+            if (isZip && (key.endsWith('_win.zip') || key.endsWith('_mac.zip'))) {
+                const baseName = key.replace(/_win\.zip$|_mac\.zip$/, '');
+                const baseZipFile = `${baseName}.zip`;
+                // If the corresponding base zip file exists at the same level, skip rendering this one.
+                if (node.hasOwnProperty(baseZipFile)) {
+                    return; // Don't render this item
+                }
+            }
 
             if (key === '_password.txt') return; // Don't render password files
 
@@ -430,7 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isAdmin = urlParams.has('admin');
 
             const setupDownloadButton = (button, filePath, defaultFileName) => {
-                if (filePath && isAdmin) {
+                if (filePath) {
                     button.style.display = 'inline-block';
                     button.onclick = async () => {
                         try {

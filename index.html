@@ -103,17 +103,17 @@
                 if (!isAdmin) {
                     document.getElementById('file-details')?.classList.add('hidden');
                     document.getElementById('global-actions')?.classList.add('hidden');
-                    document.getElementById('share-btn')?.classList.add('hidden');
+                    //document.getElementById('share-btn')?.classList.add('hidden');
 
-                    const previewActions = document.getElementById('preview-actions');
-                    if (previewActions) {
-                        const buttons = previewActions.getElementsByTagName('button');
-                        for (const button of buttons) {
-                            if (button.id !== 'play-btn') {
-                                button.classList.add('hidden');
-                            }
-                        }
-                    }
+                    //const previewActions = document.getElementById('preview-actions');
+                    //if (previewActions) {
+                    //    const buttons = previewActions.getElementsByTagName('button');
+                    //    for (const button of buttons) {
+                    //        if (button.id !== 'play-btn') {
+                    //            button.classList.add('hidden');
+                    //        }
+                    //    }
+                    //}
                 }
             } catch (e) {
                 console.error("Could not set dynamic title:", e);
