@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browsepike</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="loader" class="visible">
+        <div class="spinner"></div>
+        <p>Fetching file list...</p>
+    </div>
+
+    <div class="container">
+        <aside id="file-tree-container">
+            <h1 id="main-title">Browsepike</h1>
+            <div id="global-actions">
+                <button id="reload-btn" title="Reload File List">🔄<span>Reload</span></button>
+                <button id="theme-toggle-btn" title="Toggle Theme">🌗<span>Theme</span></button>
+                <button id="expand-all-btn" title="Expand All">📂<span>Expand</span></button>
+                <button id="collapse-all-btn" title="Collapse All">📁<span>Collapse</span></button>
+            </div>
+            <nav id="file-tree"></nav>
+        </aside>
+        <main id="preview-container">
+            <div id="welcome-message">
+                <p>Select a <code>file</code> from the file browser to begin.</p>
+            </div>
+            <div id="preview-content" class="hidden">
+                <div id="preview-header">
+                    <h2 id="preview-title"></h2>
+                    <img id="preview-title-icon" class="preview-icon" src="" alt="Project Icon" style="display: none;">
+                    <div id="share-controls-wrapper" class="share-container">
+                        <label class="switch" title="Toggle between sharing a link to the file browser or a direct play link.">
+                            <input type="checkbox" id="share-mode-toggle">
+                            <span class="slider"></span>
+                        </label>
+                        <button id="share-btn" title="Copy share link">🔗 Share</button>
+                    </div>
+                </div>
+                <div id="preview-actions">
+                    <button id="download-zip-btn" title="Download web version" style="display: none;">📦 Download Zip</button>
+                    <button id="download-win-btn" title="Download for Windows" style="display: none;">💻 Download Windows</button>
+                    <button id="download-mac-btn" title="Download for Mac" style="display: none;">🍎 Download Mac</button>
+                    <button id="external-preview-btn" title="Open HTML in new tab" style="display: none;">↗️ Live Preview</button>
+                    <button id="play-btn" title="Play Game (opens index.html in new tab)" style="display: none;">▶️ Play Game</button>
+                    <button id="download-project-btn" title="Download source file" style="display: none;">⬇️ Download Source</button>
+                </div>
+                <div id="preview-area"></div>
+                <div id="file-details">
+                    <h3>File Information</h3>
+                    <p><strong>Original Name:</strong> <span id="original-zip-name"></span></p>
+                    <p><strong>Size:</strong> <span id="zip-file-size"></span></p>
+                    <p><strong>Upload Date:</strong> <span id="upload-date"></span></p>
+                    <p><strong>Linked Text File:</strong> <span id="linked-text-file">N/A</span></p>
+                    <p><strong>Linked Image File:</strong> <span id="linked-image-file">N/A</span></p>
+                    <p id="preview-file-info"></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="popup-viewer" class="hidden">
+        <div class="popup-header"><span class="popup-title"></span><div class="popup-controls"><button id="popup-newtab" title="Open in new tab">↗️</button><button class="popup-close">✕</button></div></div>
+        <div class="popup-content"></div>
+    </div>
+
+    <div id="password-prompt" class="hidden">
+        <div class="password-prompt-content">
+            <h3>Password Required</h3>
+            <p>This folder is protected. Please enter the password:</p>
+            <input type="password" id="password-input" placeholder="Password">
+            <div class="password-prompt-actions"><button id="password-submit">Unlock</button><button id="password-cancel">Cancel</button></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="index.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const pathParts = window.location.pathname.split('/').filter(p => p);
+                if (pathParts.length > 0) {
+                    const lastPart = pathParts[pathParts.length - 1];
+                    const folderName = lastPart.endsWith('.html') ? pathParts[pathParts.length - 2] : lastPart;
+                    const newTitle = folderName.charAt(0).toUpperCase() + folderName.slice(1);
+                    document.title = newTitle;
+                    
+                    const mainTitleElement = document.getElementById('main-title');
+                    if (mainTitleElement) {
+                        mainTitleElement.textContent = newTitle;
+                    }
+                }
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const isAdmin = urlParams.has('admin');
+
+                if (!isAdmin) {
+                    document.getElementById('file-details')?.classList.add('hidden');
+                    document.getElementById('global-actions')?.classList.add('hidden');
+                    document.getElementById('share-btn')?.classList.add('hidden');
+
+                    const previewActions = document.getElementById('preview-actions');
+                    if (previewActions) {
+                        const buttons = previewActions.getElementsByTagName('button');
+                        for (const button of buttons) {
+                            if (button.id !== 'play-btn') {
+                                button.classList.add('hidden');
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Could not set dynamic title:", e);
+            }
+        });
+    </script>
+</body>
+</html>
